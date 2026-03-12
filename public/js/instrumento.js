@@ -1,6 +1,14 @@
 let instrumentos = [];
 let instrumentoSeleccionado = null;
 
+function mostrarErrorModal(texto) {
+  const div = document.getElementById("mensajeErrorModal");
+
+  div.innerText = texto;
+
+  div.classList.remove("d-none");
+}
+
 function descripcionMercado(codigo) {
   if (codigo === "F") return "Renta Fija";
 
@@ -67,6 +75,8 @@ function nuevoInstrumento() {
 
   document.getElementById("id_instrumento").disabled = false;
 
+  document.getElementById("mensajeErrorModal").classList.add("d-none");
+
   modal.show();
 }
 
@@ -89,30 +99,60 @@ function editarInstrumento() {
 
   document.getElementById("id_instrumento").disabled = true;
 
+  document.getElementById("mensajeErrorModal").classList.add("d-none");
+
   modal.show();
 }
 
 async function guardarInstrumento() {
   const instrumento = {
     id_instrumento: document.getElementById("id_instrumento").value,
-
     nombre: document.getElementById("nombre").value,
-
     tipo_mercado: document.getElementById("tipo_mercado").value,
   };
 
+  let res;
+  // obtener token
+  const token = localStorage.getItem("token");
+
+  /*
+  if (!token) {
+    window.location.href = "/index.html";
+    return;
+  }
+    */
+
   if (instrumentoSeleccionado) {
-    await fetch("/api/instrumento/" + instrumento.id_instrumento, {
+    // modifciar
+    res = await fetch("/api/instrumento/" + instrumento.id_instrumento, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token, // agregar al header token para securituar api
+      },
+      Authorization: "Bearer " + token,
       body: JSON.stringify(instrumento),
     });
   } else {
-    await fetch("/api/instrumento", {
+    // crear
+    res = await fetch("/api/instrumento", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+
       body: JSON.stringify(instrumento),
     });
+  }
+  console.log("res BL", res);
+  const data = await res.json();
+
+  if (!res.ok) {
+    console.log("data del error BLF", data.error);
+    mostrarErrorModal(data.error);
+    //alert(data.error);
+    return;
   }
 
   modal.hide();

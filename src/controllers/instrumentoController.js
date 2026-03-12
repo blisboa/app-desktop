@@ -1,4 +1,5 @@
 const service = require("../services/instrumentoService");
+const log = require("../utils/fileLogger");
 
 const instrumentoController = {
   getAll: async (req, res) => {
@@ -23,10 +24,35 @@ const instrumentoController = {
 
   create: async (req, res) => {
     try {
+      //console.log("create try");
       const nuevo = await service.create(req.body);
       res.status(201).json(nuevo);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      //console.log("create ctahh");
+      log(
+        `usuario:${req.usuario.id_usuario} | POST /instrumento | ${err.stack}`,
+      );
+      // log(`Error creando instrumento ${req.body.id_instrumento}: ${err.stack}`);
+      //res.status(400).json({ error: err.message });
+      res.status(400).json({ error: "No fue posible guardar el instrumento" });
+    }
+  },
+
+  create1: async (req, res) => {
+    try {
+      const nuevo = await service.create(req.body);
+      res.status(201).json(nuevo);
+    } catch (err) {
+      // log(`Error creando instrumento ${req.body.id_instrumento}: ${err.stack}`);
+
+      /*
+      log(
+        `usuario:${req.usuario.id_usuario} | Error creando instrumento ${req.body.id_instrumento}: ${err.stack}`,
+      );
+*/
+      res.status(400).json({
+        error: "No fue posible grabar el instrumento",
+      });
     }
   },
 
