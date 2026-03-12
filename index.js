@@ -5,30 +5,35 @@ controllers = lógica HTTP
 services = acceso a datos
 */
 
-const express = require("express")
-const cors = require("cors")
-const authRoutes = require("./src/routes/authRoutes")
-const menuRoutes = require("./src/routes/menuRoutes")
-const loggerMiddleware = require('./src/middlewares/logger.middleware');
+const express = require("express");
+const cors = require("cors");
 
-require("dotenv").config()
+// rutas
+const authRoutes = require("./src/routes/authRoutes");
+const menuRoutes = require("./src/routes/menuRoutes");
+const instrumentoRoutes = require("./src/routes/instrumentoRoutes");
 
-const app = express()
+// log
+const loggerMiddleware = require("./src/middlewares/logger.middleware");
 
-app.use(cors())
-app.use(express.json())
-app.use(express.static("public"))
+require("dotenv").config();
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static("public"));
 app.use(loggerMiddleware);
 
-app.use("/api/auth",authRoutes)
-app.use("/api/menu",menuRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/menu", menuRoutes);
+app.use("/api/instrumento", instrumentoRoutes);
 
-app.get("/",(req,res)=>{
-  res.send("API funcionando")
-})
+app.get("/", (req, res) => {
+  res.send("API funcionando");
+});
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=>{
-  console.log("Servidor escuchando en http://localhost:"+PORT)
-})
+app.listen(PORT, () => {
+  console.log("Servidor escuchando en http://localhost:" + PORT);
+});

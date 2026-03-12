@@ -1,42 +1,37 @@
 async function cargarMenus() {
+  // obtener el token guardado después del login
+  const token = localStorage.getItem("token");
+  const resp = await fetch("/api/menu", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
 
-    // obtener el token guardado después del login
-    const token = localStorage.getItem("token")
-    const resp = await fetch("/api/menu", {
+  const menus = await resp.json();
+  const ul = document.getElementById("menu");
 
-        headers: {
-            "Authorization": "Bearer " + token
-        }
+  // limpiar menú antes de dibujarlo
+  ul.innerHTML = "";
 
-    })
+  // recorrer los menús recibidos desde la API
+  menus.forEach((m) => {
+    const li = document.createElement("li");
 
-    const menus = await resp.json()
-    const ul = document.getElementById("menu")
+    // crear el link
+    const link = document.createElement("a");
 
-    // limpiar menú antes de dibujarlo
-    ul.innerHTML = ""
+    // la ruta viene desde la base de datos
+    link.href = m.ruta;
 
-    // recorrer los menús recibidos desde la API
-    menus.forEach(m => {
-        const li = document.createElement("li")
+    // texto visible del menú
+    link.innerText = m.nombre;
 
-        // crear el link
-        const link = document.createElement("a")
+    // agregar el link dentro del li
+    li.appendChild(link);
 
-        // la ruta viene desde la base de datos
-        link.href = m.ruta
-
-        // texto visible del menú
-        link.innerText = m.nombre
-
-        // agregar el link dentro del li
-        li.appendChild(link)
-
-        // agregar el li al ul
-        ul.appendChild(li)
-
-    })
-
+    // agregar el li al ul
+    ul.appendChild(li);
+  });
 }
 
-cargarMenus()
+cargarMenus();

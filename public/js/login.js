@@ -1,36 +1,29 @@
-async function login(){
+async function login() {
+  const usuario = document.getElementById("usuario").value;
+  const clave = document.getElementById("clave").value;
 
-    const usuario = document.getElementById("usuario").value
-    const clave = document.getElementById("clave").value
+  const resp = await fetch("/api/auth/login", {
+    method: "POST",
 
-    const resp = await fetch("/api/auth/login",{
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-        method:"POST",
+    body: JSON.stringify({
+      usuario: usuario,
+      clave: clave,
+    }),
+  });
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+  const data = await resp.json();
 
-        body:JSON.stringify({
-            usuario:usuario,
-            clave:clave
-        })
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("nombre_usuario", data.usuario.nombre);
+    window.location.href = "/principal.html";
+  } else {
+    const mensaje = document.getElementById("mensajeError");
 
-    })
-
-    const data = await resp.json()
-
-    if(data.token){
-        localStorage.setItem("token",data.token)
-        localStorage.setItem("nombre_usuario",data.usuario.nombre)
-        window.location.href="/principal.html"
-
-    }else{
-
-        const mensaje=document.getElementById("mensajeError")
-
-        mensaje.classList.remove("d-none")
-
-    }
-
+    mensaje.classList.remove("d-none");
+  }
 }

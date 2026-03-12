@@ -29,12 +29,12 @@ Servir como base simple y ordenada para futuras funcionalidades:
 - Express
 - CORS
 - dotenv
-- MSSQL (preparado para futuras versiones)
+- PG
 - Nodemon (desarrollo)
 
 ---
 ##  Instalación de librerias (paquetes)
-npm install express cors dotenv
+npm install express cors dotenv pg
 npm install nodemon --save-dev
 ---
 ##  Estructura del proyecto
