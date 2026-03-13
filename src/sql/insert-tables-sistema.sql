@@ -12,7 +12,7 @@ INSERT INTO menu (id_menu, nombre) VALUES ('INGPME', 'Cargar Precios de Mercado'
 INSERT INTO menu (id_menu, nombre) VALUES ('PROVAL', 'Valorizar Carteras');
 INSERT INTO menu (id_menu, nombre) VALUES ('CONCAR', 'Consultar Carteras');
 
-update menu set ruta = '/default.html'
+update menu set ruta = '/default.html';
 
 
 -- Text to SQL original prompt:
