@@ -29,12 +29,13 @@ function badgeMercado(codigo) {
   return codigo;
 }
 
-const tabla = document.querySelector('#tablaInstrumentos tbody');
+const tabla = document.querySelector('#tablaEmisores tbody');
 
-const modal = new bootstrap.Modal(document.getElementById('modalInstrumento'));
+const modal = new bootstrap.Modal(document.getElementById('modalEmisor'));
 
-async function cargarInstrumentos() {
-  const res = await fetch('/api/instrumento');
+// aqui tengo que modifciar para que muestre emisores en vez de los instrumnetos
+async function cargarEmisores() {
+  const res = await fetch('/api/emisor');
 
   instrumentos = await res.json();
 
@@ -45,9 +46,9 @@ async function cargarInstrumentos() {
 
     tr.innerHTML = `
         <td>${i + 1}</td>
-        <td>${inst.id_instrumento}</td>
+        <td>${inst.id_emisor}</td>
+        <td>${inst.razon_social}</td>
         <td>${inst.nombre}</td>
-        <td>${badgeMercado(inst.tipo_mercado)}</td>
     `;
 
     tr.onclick = () => seleccionarFila(tr, inst);
@@ -58,7 +59,7 @@ async function cargarInstrumentos() {
 
 function seleccionarFila(tr, inst) {
   document
-    .querySelectorAll('#tablaInstrumentos tr')
+    .querySelectorAll('#tablaEmisores tr')
     .forEach((f) => f.classList.remove('table-primary'));
 
   tr.classList.add('table-primary');
@@ -66,47 +67,38 @@ function seleccionarFila(tr, inst) {
   instrumentoSeleccionado = inst;
 }
 
-function nuevoInstrumento() {
+function nuevoEmisor() {
   instrumentoSeleccionado = null;
 
-  document.getElementById('tituloModal').innerText = 'Nuevo Instrumento';
-
+  document.getElementById('tituloModal').innerText = 'Nuevo Emisor';
   document.getElementById('formInstrumento').reset();
-
-  document.getElementById('id_instrumento').disabled = false;
-
+  document.getElementById('id_emisor').disabled = false;
   document.getElementById('mensajeErrorModal').classList.add('d-none');
 
   modal.show();
 }
 
-function editarInstrumento() {
+function editarEmisor() {
   if (!instrumentoSeleccionado) {
-    mostrarMensaje('Seleccione un instrumento');
-
+    mostrarMensaje('Seleccione un emisor');
     return;
   }
 
-  document.getElementById('tituloModal').innerText = 'Editar Instrumento';
-
-  document.getElementById('id_instrumento').value = instrumentoSeleccionado.id_instrumento;
-
+  document.getElementById('tituloModal').innerText = 'Editar Emisor';
+  document.getElementById('id_emisor').value = instrumentoSeleccionado.id_emisor;
   document.getElementById('nombre').value = instrumentoSeleccionado.nombre;
-
-  document.getElementById('tipo_mercado').value = instrumentoSeleccionado.tipo_mercado;
-
-  document.getElementById('id_instrumento').disabled = true;
-
+  document.getElementById('razon_social').value = instrumentoSeleccionado.razon_social;
+  document.getElementById('id_emisor').disabled = true;
   document.getElementById('mensajeErrorModal').classList.add('d-none');
 
   modal.show();
 }
 
-async function guardarInstrumento() {
+async function guardarEmisor() {
   const instrumento = {
-    id_instrumento: document.getElementById('id_instrumento').value,
-    nombre: document.getElementById('nombre').value,
-    tipo_mercado: document.getElementById('tipo_mercado').value,
+    id_instrumento: document.getElementById('id_emisor').value,
+    nombre: document.getElementById('razon_social').value,
+    tipo_mercado: document.getElementById('nombre').value,
   };
 
   let res;
@@ -122,7 +114,7 @@ async function guardarInstrumento() {
 
   if (instrumentoSeleccionado) {
     // modifciar
-    res = await fetch('/api/instrumento/' + instrumento.id_instrumento, {
+    res = await fetch('/api/instrumento/' + instrumento.id_emisor, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -156,19 +148,19 @@ async function guardarInstrumento() {
   cargarInstrumentos();
 }
 
-async function eliminarInstrumento() {
+async function eliminarEmisor() {
   if (!instrumentoSeleccionado) {
-    mostrarMensaje('Seleccione un instrumento');
+    mostrarMensaje('Seleccione un emisor');
     return;
   }
 
-  if (!confirm('¿Eliminar instrumento?')) return;
-
-  await fetch('/api/instrumento/' + instrumentoSeleccionado.id_instrumento, {
+  if (!confirm('¿Eliminar emisor?')) return;
+  console.log(instrumentoSeleccionado);
+  await fetch('/api/emisor/' + instrumentoSeleccionado.id_emisor, {
     method: 'DELETE',
   });
 
-  cargarInstrumentos();
+  cargarEmisores();
 }
 
 function mostrarMensaje(texto) {
@@ -181,4 +173,4 @@ function mostrarMensaje(texto) {
   toast.show();
 }
 
-cargarInstrumentos();
+cargarEmisores();
