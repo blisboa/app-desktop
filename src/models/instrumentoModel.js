@@ -1,44 +1,37 @@
-const pool = require("../config/database");
+const Instrumento = require('./instrumento');
 
-const Instrumento = {
+const instrumentoModel = {
   async getAll() {
-    const res = await pool.query(
-      "SELECT * FROM instrumento ORDER BY id_instrumento",
-    );
-    return res.rows;
+    console.log('getll orm 1');
+    return await Instrumento.findAll({
+      order: [['id_instrumento', 'ASC']],
+    });
   },
 
   async getById(id) {
-    const res = await pool.query(
-      "SELECT * FROM instrumento WHERE id_instrumento = $1",
-      [id],
-    );
-    return res.rows[0];
+    return await Instrumento.findByPk(id);
   },
 
-  async create({ id_instrumento, nombre, tipo_mercado }) {
-    const res = await pool.query(
-      "INSERT INTO instrumento (id_instrumento, nombre, tipo_mercado) VALUES ($1, $2, $3) RETURNING *",
-      [id_instrumento, nombre, tipo_mercado],
-    );
-    return res.rows[0];
+  async create(data) {
+    console.log('create orm 1', data);
+    return await Instrumento.create(data);
   },
 
-  async update(id, { nombre, tipo_mercado }) {
-    const res = await pool.query(
-      "UPDATE instrumento SET nombre=$1, tipo_mercado=$2 WHERE id_instrumento=$3 RETURNING *",
-      [nombre, tipo_mercado, id],
-    );
-    return res.rows[0];
+  async update(id, data) {
+    const instrumento = await Instrumento.findByPk(id);
+    if (!instrumento) return null;
+    console.log('upadate orm 1', data);
+    await instrumento.update(data);
+    return instrumento;
   },
 
   async delete(id) {
-    const res = await pool.query(
-      "DELETE FROM instrumento WHERE id_instrumento=$1 RETURNING *",
-      [id],
-    );
-    return res.rows[0];
+    const instrumento = await Instrumento.findByPk(id);
+    if (!instrumento) return null;
+    console.log('delete  orm 1', data);
+    await instrumento.destroy();
+    return instrumento;
   },
 };
 
-module.exports = Instrumento;
+module.exports = instrumentoModel;
