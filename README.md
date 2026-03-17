@@ -92,12 +92,14 @@ app-01/
 
 ## Próximas versiones
 
-* Login real contra API
-* CRUD de compras y ventas
-* Consulta de cartera
-* Persistencia en base de datos
-* Autenticación JWT
-* Manejo de errores centralizado
+### Trabajo ABP 7
+* Usar ORM
+* Implementar una operación simulada que involucre al menos 2  acciones consecutivas (por ejemplo, registrar un usuario y  crear su historial). 
+* Grabar y Consultar COmpras.
+
+### Trabajo ABP 8
+* Estructurar  las  respuestas  de  la  API  con  formato  consistente  (  status, message, data  ). 
+* Subir un archivo al sever
 
 ---
 
