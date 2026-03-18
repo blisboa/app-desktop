@@ -1,4 +1,6 @@
 /*
+
+Capas/Layer:
 index.js = punto de entrada
 routes   = definen URLs
 controllers = lógica HTTP
@@ -14,6 +16,9 @@ const authRoutes = require('./src/routes/authRoutes');
 const menuRoutes = require('./src/routes/menuRoutes');
 const instrumentoRoutes = require('./src/routes/instrumentoRoutes');
 const emisorRoutes = require('./src/routes/emisorRoutes');
+const operacionRoutes = require('./src/routes/operacionRoutes');
+const fondoRoutes = require('./src/routes/fondoRoutes');
+const nemotecnicoRoutes = require('./src/routes/nemotecnicoRoutes');
 
 // log
 const loggerMiddleware = require('./src/middlewares/logger.middleware');
@@ -30,6 +35,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/instrumento', instrumentoRoutes);
 app.use('/api/emisor', emisorRoutes);
+app.use('/api/operaciones', operacionRoutes);
+app.use('/api/fondos', fondoRoutes);
+app.use('/api/nemotecnicos', nemotecnicoRoutes);
 
 app.get('/', (req, res) => {
   res.send('API funcionando');
