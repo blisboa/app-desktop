@@ -91,15 +91,9 @@ app-01/
 ---
 
 ## Próximas versiones
-
-### Trabajo ABP 7
-
-* Implementar una operación simulada que involucre al menos 2  acciones consecutivas (por ejemplo, registrar un operacion y  crear su detalle). 
-* Grabar y Consultar COmpras.
-
 ### Trabajo ABP 8
 * Estructurar  las  respuestas  de  la  API  con  formato  consistente  (  status, message, data  ). 
-* Subir un archivo al sever
+
 
 ---
 

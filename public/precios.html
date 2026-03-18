@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Carga Precios de Mercado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container mt-5">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/principal.html">
+                Gestión de Portafolios
+            </a>
+            <div class="d-flex align-items-center text-white">
+                <i class="bi bi-person-circle me-2"></i>
+                <span id="nombre_usuario"></span>
+                <button class="btn btn-outline-light ms-3" onclick="logout()">Salir</button>
+            </div>
+        </div>
+    </nav>
+    <h3>Carga de Precios de Mercado</h3>
+
+    <div class="card p-4">
+
+        <div class="mb-3">
+            <label>Seleccione archivo (.txt)</label>
+            <input type="file" id="archivo" class="form-control" accept=".txt">
+        </div>
+
+        <button class="btn btn-primary" onclick="subirArchivo()">Subir Archivo</button>
+
+        <!-- Spinner -->
+        <div id="loading" class="text-center mt-3" style="display:none;">
+            <div class="spinner-border text-primary"></div>
+            <div>Cargando archivo...</div>
+        </div>
+
+        <!-- Resultado -->
+        <div id="resultado" class="alert mt-3" style="display:none;"></div>
+
+    </div>
+
+    <script>
+        async function subirArchivo() {
+            const input = document.getElementById("archivo");
+            const file = input.files[0];
+
+            if (!file) {
+                alert("Seleccione un archivo");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("archivo", file);
+
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("resultado").style.display = "none";
+            const token = localStorage.getItem('token');
+
+            try {
+                const res = await fetch("/api/precios/upload", {
+                    method: "POST",
+                    headers: {
+                        Authorization: 'Bearer ' + token, // agregar al header token para securituar api
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                document.getElementById("loading").style.display = "none";
+
+                const div = document.getElementById("resultado");
+                div.style.display = "block";
+
+                if (res.ok) {
+                    div.className = "alert alert-success";
+                    div.innerText = `✔ ${data.mensaje}. Registros procesados: ${data.registros}`;
+                } else {
+                    div.className = "alert alert-danger";
+                    div.innerText = data.error;
+                }
+
+            } catch (err) {
+                document.getElementById("loading").style.display = "none";
+
+                const div = document.getElementById("resultado");
+                div.style.display = "block";
+                div.className = "alert alert-danger";
+                div.innerText = "Error al subir archivo";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

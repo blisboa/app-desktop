@@ -115,3 +115,11 @@ precio	numeric(18,4),
    primary key (id_operacion,correlativo)  
 );
 
+create table precio_mercado(
+fecha	date,
+id_nemotecnico	varchar(50),
+precio	numeric(18,4),
+  constraint fk_nemotecnico foreign key (id_nemotecnico)  references nemotecnico(id_nemotecnico),
+ primary key (fecha,id_nemotecnico)  
+
+);

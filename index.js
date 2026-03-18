@@ -19,7 +19,7 @@ const emisorRoutes = require('./src/routes/emisorRoutes');
 const operacionRoutes = require('./src/routes/operacionRoutes');
 const fondoRoutes = require('./src/routes/fondoRoutes');
 const nemotecnicoRoutes = require('./src/routes/nemotecnicoRoutes');
-
+const precioRoutes = require('./src/routes/precioRoutes');
 // log
 const loggerMiddleware = require('./src/middlewares/logger.middleware');
 
@@ -38,6 +38,7 @@ app.use('/api/emisor', emisorRoutes);
 app.use('/api/operaciones', operacionRoutes);
 app.use('/api/fondos', fondoRoutes);
 app.use('/api/nemotecnicos', nemotecnicoRoutes);
+app.use('/api/precios', precioRoutes);
 
 app.get('/', (req, res) => {
   res.send('API funcionando');
