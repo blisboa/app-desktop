@@ -24,14 +24,10 @@ const emisorController = {
 
   create: async (req, res) => {
     try {
-      //console.log("create try");
       const nuevo = await service.create(req.body);
       res.status(201).json(nuevo);
     } catch (err) {
-      //console.log("create ctahh");
       log(`usuario:${req.usuario.id_usuario} | POST /instrumento | ${err.stack}`);
-      // log(`Error creando instrumento ${req.body.id_instrumento}: ${err.stack}`);
-      //res.status(400).json({ error: err.message });
       res.status(400).json({ error: 'No fue posible guardar el instrumento' });
     }
   },

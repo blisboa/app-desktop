@@ -10,3 +10,10 @@ INSERT INTO rol_menu (id_rol, id_menu) VALUES ('ADMIN', 'INGPME');
 INSERT INTO rol_menu (id_rol, id_menu) VALUES ('BACK', 'INGPME');
 
 
+delete from rol_menu where id_menu = 'CONOPE';
+INSERT INTO rol_menu (id_rol, id_menu) VALUES ('ADMIN', 'CONOPE');
+INSERT INTO rol_menu (id_rol, id_menu) VALUES ('BACK', 'CONOPE');
+
+delete from rol_menu where id_menu = 'INGCPA';
+INSERT INTO rol_menu (id_rol, id_menu) VALUES ('ADMIN', 'INGCPA');
+INSERT INTO rol_menu (id_rol, id_menu) VALUES ('BACK', 'INGCPA');

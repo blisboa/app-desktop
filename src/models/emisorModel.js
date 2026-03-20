@@ -6,24 +6,23 @@ const Emisor = {
     return res.rows;
   },
 
-  // modificar de aqui hacia abjo
   async getById(id) {
-    const res = await pool.query('SELECT * FROM instrumento WHERE id_instrumento = $1', [id]);
+    const res = await pool.query('SELECT * FROM emisor WHERE id_emisor = $1', [id]);
     return res.rows[0];
   },
 
-  async create({ id_instrumento, nombre, tipo_mercado }) {
+  async create({ id_emisor, razon_social, nombre }) {
     const res = await pool.query(
-      'INSERT INTO instrumento (id_instrumento, nombre, tipo_mercado) VALUES ($1, $2, $3) RETURNING *',
-      [id_instrumento, nombre, tipo_mercado]
+      'INSERT INTO emisor (id_emisor, razon_social,nombre) VALUES ($1, $2, $3) RETURNING *',
+      [id_emisor, razon_social, nombre]
     );
     return res.rows[0];
   },
 
-  async update(id, { nombre, tipo_mercado }) {
+  async update(id, { razon_social, nombre }) {
     const res = await pool.query(
-      'UPDATE instrumento SET nombre=$1, tipo_mercado=$2 WHERE id_instrumento=$3 RETURNING *',
-      [nombre, tipo_mercado, id]
+      'UPDATE emisor SET razon_social=$1, nombre=$2 WHERE id_emisor=$3 RETURNING *',
+      [razon_social, nombre, id]
     );
     return res.rows[0];
   },

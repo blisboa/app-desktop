@@ -87,14 +87,6 @@ app-01/
 
 * `npm run dev` → Ejecutar en modo desarrollo
 * `npm run start` → Ejecutar en modo producción
-
----
-
-## Próximas versiones
-### Trabajo ABP 8
-* Estructurar  las  respuestas  de  la  API  con  formato  consistente  (  status, message, data  ). 
-
-
 ---
 
 ## Autor

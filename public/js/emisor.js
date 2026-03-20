@@ -1,5 +1,5 @@
-let instrumentos = [];
-let instrumentoSeleccionado = null;
+let emisores = [];
+let emisorSeleccionado = null;
 
 function mostrarErrorModal(texto) {
   const div = document.getElementById('mensajeErrorModal');
@@ -9,39 +9,16 @@ function mostrarErrorModal(texto) {
   div.classList.remove('d-none');
 }
 
-function descripcionMercado(codigo) {
-  if (codigo === 'F') return 'Renta Fija';
-
-  if (codigo === 'V') return 'Renta Variable';
-
-  return codigo;
-}
-
-function badgeMercado(codigo) {
-  if (codigo === 'F') {
-    return '<span class="badge bg-primary">Renta Fija</span>';
-  }
-
-  if (codigo === 'V') {
-    return '<span class="badge bg-success">Renta Variable</span>';
-  }
-
-  return codigo;
-}
-
 const tabla = document.querySelector('#tablaEmisores tbody');
-
 const modal = new bootstrap.Modal(document.getElementById('modalEmisor'));
 
-// aqui tengo que modifciar para que muestre emisores en vez de los instrumnetos
 async function cargarEmisores() {
   const res = await fetch('/api/emisor');
 
-  instrumentos = await res.json();
-
+  emisores = await res.json();
   tabla.innerHTML = '';
 
-  instrumentos.forEach((inst, i) => {
+  emisores.forEach((inst, i) => {
     const tr = document.createElement('tr');
 
     tr.innerHTML = `
@@ -64,11 +41,11 @@ function seleccionarFila(tr, inst) {
 
   tr.classList.add('table-primary');
 
-  instrumentoSeleccionado = inst;
+  emisorSeleccionado = inst;
 }
 
 function nuevoEmisor() {
-  instrumentoSeleccionado = null;
+  emisorSeleccionado = null;
 
   document.getElementById('tituloModal').innerText = 'Nuevo Emisor';
   document.getElementById('formInstrumento').reset();
@@ -79,15 +56,15 @@ function nuevoEmisor() {
 }
 
 function editarEmisor() {
-  if (!instrumentoSeleccionado) {
-    mostrarMensaje('Seleccione un emisor');
+  if (!emisorSeleccionado) {
+    mostrarMensaje('Para editar seleccione un emisor.');
     return;
   }
 
   document.getElementById('tituloModal').innerText = 'Editar Emisor';
-  document.getElementById('id_emisor').value = instrumentoSeleccionado.id_emisor;
-  document.getElementById('nombre').value = instrumentoSeleccionado.nombre;
-  document.getElementById('razon_social').value = instrumentoSeleccionado.razon_social;
+  document.getElementById('id_emisor').value = emisorSeleccionado.id_emisor;
+  document.getElementById('nombre').value = emisorSeleccionado.nombre;
+  document.getElementById('razon_social').value = emisorSeleccionado.razon_social;
   document.getElementById('id_emisor').disabled = true;
   document.getElementById('mensajeErrorModal').classList.add('d-none');
 
@@ -95,68 +72,65 @@ function editarEmisor() {
 }
 
 async function guardarEmisor() {
-  const instrumento = {
-    id_instrumento: document.getElementById('id_emisor').value,
-    nombre: document.getElementById('razon_social').value,
-    tipo_mercado: document.getElementById('nombre').value,
-  };
+  try {
+    const emisor = {
+      id_emisor: document.getElementById('id_emisor').value,
+      razon_social: document.getElementById('razon_social').value,
+      nombre: document.getElementById('nombre').value,
+    };
 
-  let res;
-  // obtener token
-  const token = localStorage.getItem('token');
+    let res;
+    // obtener token
+    const token = localStorage.getItem('token');
 
-  /*
-  if (!token) {
-    window.location.href = "/index.html";
-    return;
-  }
-    */
-
-  if (instrumentoSeleccionado) {
-    // modifciar
-    res = await fetch('/api/instrumento/' + instrumento.id_emisor, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token, // agregar al header token para securituar api
-      },
-      Authorization: 'Bearer ' + token,
-      body: JSON.stringify(instrumento),
-    });
-  } else {
-    // crear
-    res = await fetch('/api/instrumento', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    if (emisorSeleccionado) {
+      // modifciar
+      res = await fetch('/api/emisor/' + emisor.id_emisor, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token, // agregar al header token para securituar api
+        },
         Authorization: 'Bearer ' + token,
-      },
+        body: JSON.stringify(emisor),
+      });
+    } else {
+      // crear
+      res = await fetch('/api/emisor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
 
-      body: JSON.stringify(instrumento),
-    });
+        body: JSON.stringify(emisor),
+      });
+    }
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      mostrarErrorModal(data.error);
+      return;
+    }
+
+    modal.hide();
+
+    cargarEmisores();
+  } catch (err) {
+    mostrarErrorModal('Error al editar el emisor.');
   }
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    mostrarErrorModal(data.error);
-    return;
-  }
-
-  modal.hide();
-
-  cargarInstrumentos();
 }
 
 async function eliminarEmisor() {
-  if (!instrumentoSeleccionado) {
-    mostrarMensaje('Seleccione un emisor');
+  if (!emisorSeleccionado) {
+    mostrarMensaje('Para eliminar seleccione un emisor.');
     return;
   }
 
   if (!confirm('¿Eliminar emisor?')) return;
-  console.log(instrumentoSeleccionado);
-  await fetch('/api/emisor/' + instrumentoSeleccionado.id_emisor, {
+  console.log(emisorSeleccionado);
+  await fetch('/api/emisor/' + emisorSeleccionado.id_emisor, {
     method: 'DELETE',
   });
 

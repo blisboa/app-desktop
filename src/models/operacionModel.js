@@ -43,7 +43,7 @@ const Operacion = {
       params.push(fecha_hasta);
     }
 
-    query += ` ORDER BY o.fecha DESC, o.id_operacion`;
+    query += ` ORDER BY o.fecha DESC, o.id_operacion DESC`;
 
     const res = await pool.query(query, params);
     return res.rows;
